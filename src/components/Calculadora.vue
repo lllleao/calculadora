@@ -23,6 +23,7 @@ const props = defineProps(['igual', 'getNumbers', 'show', 'setNumbers', 'setOper
                             <li @click="props.setOperacao" class="fs-2 list-group-item" data-operacao="subtracao">-</li>
                             <li @click="props.setOperacao" class="fs-2 list-group-item" data-operacao="divisao">/</li>
                             <li @click="props.setOperacao" class="fs-2 list-group-item" data-operacao="multiplicacao">*</li>
+                            <li @click="props.setOperacao" class="fs-2 list-group-item" data-operacao="porcentagem">%</li>
                             <li @click="props.igual" class="fs-2 list-group-item">
                                 =
                             </li>

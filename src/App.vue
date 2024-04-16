@@ -6,7 +6,6 @@ const state = reactive({
   numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '.'],
   number01: '',
   number02: '',
-  operation: ['+', '-', '/', '*'],
   simboloOperacao: '',
   nomeOperacaoAtual: '',
   numeroDaConta: '',
@@ -38,6 +37,8 @@ const operacao = () => {
       return divisaoPorZero(number01, number02)
     case 'multiplicacao':
       return parseFloat(number01) * parseFloat(number02)
+    case 'porcentagem':
+      return (parseFloat(number01) / 100) * parseFloat(number02)
   }
 }
 
@@ -53,8 +54,10 @@ const setNumber02 = (numero) => {
 
 const setNumbers = (evento) => {
   state.numeroDaConta += evento.target.innerHTML
-  const listaNomesOp = ['soma', 'subtracao', 'multiplicacao', 'divisao']
-  
+  const listaNomesOp = ['soma', 'subtracao', 'multiplicacao', 'divisao', 'porcentagem']
+  if (state.numeroDaConta[0] === '.') {
+    state.numeroDaConta = ''
+  }
   const teste = listaNomesOp.some(item => {
     return item === state.nomeOperacaoAtual
   })
