@@ -50,17 +50,20 @@ const props = defineProps(['igual', 'getNumbers', 'show', 'setNumbers', 'setOper
 .list-group {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
+    gap: .5rem;
     place-items: center;
 
     li {
-        width: 90px;
-        height: 90px;
+        width: 6rem;
+        height: 6rem;
+        max-width: 100%;
+        max-height: 100%;
         cursor: pointer;
         border-radius: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
+
     }
 }
 </style>
