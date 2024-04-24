@@ -26,13 +26,13 @@ const mudarModo = (evento) => {
                     <li class="numero__list__item" @click="props.setOperacao" data-operacao="soma">+</li>
                     <li class="numero__list__item" @click="props.setOperacao" data-operacao="subtracao">-</li>
                     <li class="numero__list__item" @click="props.setOperacao" data-operacao="divisao">/</li>
-                    <li class="numero__list__item" @click="props.setOperacao" data-operacao="multiplicacao">*</li>
+                    <li class="numero__list__item" @click="props.setOperacao" data-operacao="multiplicacao">x</li>
                     <li class="numero__list__item" @click="props.setOperacao" data-operacao="porcentagem">%</li>
                     <li class="igual numero__list__item" @click="props.igual">
                         =
                     </li>
                     <li class="delete numero__list__item" @click="props.apagar">
-                        << </li>
+                        <i class="fa-solid fa-delete-left"></i> </li>
                 </ul>
             </div>
         </div>
@@ -50,5 +50,5 @@ const mudarModo = (evento) => {
 </template>
 
 <style lang="scss">
-@import '../scss/main.scss';
+@import '@/scss/main.scss';
 </style>
