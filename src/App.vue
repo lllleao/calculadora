@@ -17,6 +17,7 @@ const state = reactive({
   novoModo: ''
 })
 
+
 const mudarModo = (evento) => {
     const modo = evento.target.checked
     state.novoModo = modo
@@ -34,7 +35,6 @@ const divisaoPorZero = (n1, n2) => {
 
 const operacao = () => {
   const { number01, number02, nomeOperacaoAtual } = state
-  const verificacao = '+'.includes(nomeOperacaoAtual)
 
   switch (nomeOperacaoAtual) {
     case 'soma':
@@ -94,7 +94,6 @@ const apagarPontoDuplicado = () => {
 
 }
 
-
 function adicionarVirgula(numero) {
   let inde = numero.indexOf(',')
   state.juntarNumVirgula = inde !== -1 ? numero.slice(inde) : ''
@@ -146,6 +145,7 @@ const setNumbers = (evento) => {
   }
 
 }
+
 // Fim dos SetNumbers
 
 const resultadoZero = () => {
@@ -180,6 +180,7 @@ const setOperacao = (item) => {
   }
 
 }
+
 
 const show = () => {
   const resultadoTela = `${state.number01Virgula} ${state.simboloOperacao} ${state.number02Virgula}`
@@ -314,10 +315,8 @@ const eventoTeclado = evento => {
   const verificacaoOperacao = '+-/*%'.includes(teclado)
   const verificacaoIgual = teclado === 'Enter'
   const verificacaoDelete = teclado === 'Backspace'
-  const verificacaoSeta = teclado === 'ArrowRight'
-
-  state.novoModo = verificacaoSeta
-
+  const verificacaoSeta = teclado === 'ArrowRight' || teclado === 'ArrowLeft'
+  
   if (verificacaoNumeros) {
     setNumbers(teclado)
   } else if (verificacaoOperacao) {
@@ -326,6 +325,8 @@ const eventoTeclado = evento => {
     igual()
   } else if (verificacaoDelete) {
     apagar()
+  } else if (verificacaoSeta) {
+    state.novoModo = teclado === 'ArrowRight'
   }
   
 }
