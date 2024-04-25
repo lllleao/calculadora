@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { onBeforeMount, onMounted,reactive } from 'vue'
 import Calculadora from './components/Calculadora.vue'
 const state = reactive({
   numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ','],
@@ -13,8 +13,14 @@ const state = reactive({
   converterPonto: '',
   number01Virgula: '',
   number02Virgula: '',
-  juntarNumVirgula: ''
+  juntarNumVirgula: '',
+  novoModo: ''
 })
+
+const mudarModo = (evento) => {
+    const modo = evento.target.checked
+    state.novoModo = modo
+}
 
 const divisaoPorZero = (n1, n2) => {
   const operacaoTeste = parseFloat(n1) / parseFloat(n2)
@@ -28,17 +34,23 @@ const divisaoPorZero = (n1, n2) => {
 
 const operacao = () => {
   const { number01, number02, nomeOperacaoAtual } = state
+  const verificacao = '+'.includes(nomeOperacaoAtual)
 
   switch (nomeOperacaoAtual) {
     case 'soma':
+    case '+':
       return parseFloat(number01) + parseFloat(number02)
     case 'subtracao':
+    case '-':
       return parseFloat(number01) - parseFloat(number02)
     case 'divisao':
+    case '/':
       return divisaoPorZero(number01, number02)
     case 'multiplicacao':
+    case '*':
       return parseFloat(number01) * parseFloat(number02)
     case 'porcentagem':
+    case '%':
       return (parseFloat(number01) / 100) * parseFloat(number02)
   }
 }
@@ -104,17 +116,24 @@ function adicionarVirgula(numero) {
 
 const setNumbers = (evento) => {
   seMensagemDividirPorZero()
-  state.numeroDaConta += evento.target.innerHTML
+  if (verificaSeEObjeto(evento)) {
+    state.numeroDaConta += evento
+  } else {
+    state.numeroDaConta += evento.target.innerHTML
+  }
   apagarPontoDuplicado()
 
 
   const seComecaComPonto = state.numeroDaConta[0] === ','
+  const seComecaComZero = state.numeroDaConta[0] === '0' && state.numeroDaConta[1] !== ','
 
   if (seComecaComPonto) {
     state.numeroDaConta = ''
+  } else if (seComecaComZero) {
+    state.numeroDaConta = '0'
   }
 
-  const listaNomesOp = ['soma', 'subtracao', 'multiplicacao', 'divisao', 'porcentagem']
+  const listaNomesOp = ['soma', 'subtracao', 'multiplicacao', 'divisao', 'porcentagem', '+', '-', '/', '*', '%']
 
   const verificacao = listaNomesOp.some(item => {
     return item === state.nomeOperacaoAtual
@@ -140,15 +159,22 @@ const resultadoZero = () => {
 }
 
 const setOperacao = (item) => {
+  
   let { number01, number02 } = state
 
 
   const verificacao = number01.length >= 1 && number02.length === 0 && state.number01 !== state.dPorZero
 
   if (verificacao) {
-    state.nomeOperacaoAtual = item.target.dataset.operacao
-    state.simboloOperacao = item.target.innerHTML
-    state.numeroDaConta = ''
+    if (verificaSeEObjeto(item)) {
+      state.nomeOperacaoAtual = item
+      state.simboloOperacao = item
+      state.numeroDaConta = ''
+    } else {
+      state.nomeOperacaoAtual = item.target.dataset.operacao
+      state.simboloOperacao = item.target.innerHTML
+      state.numeroDaConta = ''
+    }
   } else if (!verificacao) {
     // pass
   }
@@ -263,18 +289,61 @@ const apagarElemento = () => {
   }
 }
 
-const apagar = (evento) => {
+const apagar = () => {
   apagarElemento()
   apagarElementoComVirgula()
 }
 
+const zerar = () => {
+  state.numeroDaConta = ''
+  state.number01 = ''
+  state.number02 = ''
+  state.number01Virgula = ''
+  state.number02Virgula = ''
+  state.simboloOperacao = ''
+  state.nomeOperacaoAtual = ''
+}
+
+const verificaSeEObjeto = item => {
+  return typeof item !== 'object'
+}
+
+const eventoTeclado = evento => {
+  const teclado = evento.key
+  const verificacaoNumeros = '1234567890,'.includes(teclado)
+  const verificacaoOperacao = '+-/*%'.includes(teclado)
+  const verificacaoIgual = teclado === 'Enter'
+  const verificacaoDelete = teclado === 'Backspace'
+  const verificacaoSeta = teclado === 'ArrowRight'
+
+  state.novoModo = verificacaoSeta
+
+  if (verificacaoNumeros) {
+    setNumbers(teclado)
+  } else if (verificacaoOperacao) {
+    setOperacao(teclado)
+  } else if (verificacaoIgual) {
+    igual()
+  } else if (verificacaoDelete) {
+    apagar()
+  }
+  
+}
+
+onMounted(() => {
+    document.querySelector('body').addEventListener('keydown', eventoTeclado)
+})
+
+onBeforeMount(() => {
+    document.querySelector('body').removeEventListener('keydown', eventoTeclado)
+})
 
 </script>
 
 
 <template>
   <Calculadora :get-numbers="state.numbers" :show="show()" :set-numbers="setNumbers" :set-operacao="setOperacao"
-    :igual="igual" :apagar="apagar" />
+    :igual="igual" :apagar="apagar" :zerar="zerar" :evento-teclado="eventoTeclado" :novo-modo="mudarModo" :novo-modo-resposta="state.novoModo" />
 </template>
 
 

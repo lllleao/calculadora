@@ -1,21 +1,11 @@
 <script setup>
-import { reactive } from 'vue';
 
-const props = defineProps(['igual', 'getNumbers', 'show', 'setNumbers', 'setOperacao', 'pegarElemento', 'apagar'])
-
-const state = reactive({
-    novoModo: ''
-})
-
-const mudarModo = (evento) => {
-    const modo = evento.target.checked
-    state.novoModo = modo
-}
+const props = defineProps(['igual', 'getNumbers', 'show', 'setNumbers', 'setOperacao', 'pegarElemento', 'apagar', 'zerar', 'eventoTeclado', 'novoModo', 'novoModoResposta'])
 
 </script>
 
 <template>
-    <main class="main" :class="{'main--modo-light': state.novoModo}">
+    <main @keydown="props.eventoTeclado" class="main" :class="{ 'main--modo-light': props.novoModoResposta }">
         <div class="calculadora">
             <p class="calculadora__display">{{ props.show }}</p>
             <div class="numero">
@@ -31,22 +21,24 @@ const mudarModo = (evento) => {
                     <li class="igual numero__list__item" @click="props.igual">
                         =
                     </li>
+                    <li class="numero__list__item" @click="props.zerar">C</li>
                     <li class="delete numero__list__item" @click="props.apagar">
-                        <i class="fa-solid fa-delete-left"></i> </li>
+                        <i class="fa-solid fa-delete-left"></i>
+                    </li>
                 </ul>
             </div>
         </div>
         <div class="interruptor">
-            <input @change="mudarModo" class="check" id="check" type="checkbox">
+            <input @change="props.novoModo" class="check" id="check" type="checkbox">
 
             <label class="sun-moon" for="check">
                 <i class="sun fa-solid fa-sun"></i>
-                
+
                 <i class="moon fa-solid fa-moon"></i>
             </label>
         </div>
     </main>
-    
+
 </template>
 
 <style lang="scss">
