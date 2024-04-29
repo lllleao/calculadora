@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted,reactive } from 'vue'
+import { onMounted, onUnmounted, reactive } from 'vue'
 import Calculadora from './components/Calculadora.vue'
 const state = reactive({
   numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ','],
@@ -14,14 +14,8 @@ const state = reactive({
   number01Virgula: '',
   number02Virgula: '',
   juntarNumVirgula: '',
-  novoModo: ''
+  novoModo: false
 })
-
-
-const mudarModo = (evento) => {
-    const modo = evento.target.checked
-    state.novoModo = modo
-}
 
 const divisaoPorZero = (n1, n2) => {
   const operacaoTeste = parseFloat(n1) / parseFloat(n2)
@@ -159,7 +153,7 @@ const resultadoZero = () => {
 }
 
 const setOperacao = (item) => {
-  
+
   let { number01, number02 } = state
 
 
@@ -316,7 +310,7 @@ const eventoTeclado = evento => {
   const verificacaoIgual = teclado === 'Enter'
   const verificacaoDelete = teclado === 'Backspace'
   const verificacaoSeta = teclado === 'ArrowRight' || teclado === 'ArrowLeft'
-  
+
   if (verificacaoNumeros) {
     setNumbers(teclado)
   } else if (verificacaoOperacao) {
@@ -328,15 +322,21 @@ const eventoTeclado = evento => {
   } else if (verificacaoSeta) {
     state.novoModo = teclado === 'ArrowRight'
   }
-  
 }
 
+
 onMounted(() => {
-    document.querySelector('body').addEventListener('keydown', eventoTeclado)
+  document.querySelector('body').addEventListener('keydown', eventoTeclado)
+  document.querySelector('label').addEventListener('click', () => {
+    state.novoModo = state.novoModo === true ? false : true
+  })
 })
 
-onBeforeMount(() => {
-    document.querySelector('body').removeEventListener('keydown', eventoTeclado)
+onUnmounted(() => {
+  document.querySelector('body').removeEventListener('keydown', eventoTeclado)
+  document.querySelector('label').addEventListener('click', () => {
+    state.novoModo = state.novoModo === true ? false : true
+  })
 })
 
 </script>
@@ -344,7 +344,7 @@ onBeforeMount(() => {
 
 <template>
   <Calculadora :get-numbers="state.numbers" :show="show()" :set-numbers="setNumbers" :set-operacao="setOperacao"
-    :igual="igual" :apagar="apagar" :zerar="zerar" :evento-teclado="eventoTeclado" :novo-modo="mudarModo" :novo-modo-resposta="state.novoModo" />
+    :igual="igual" :apagar="apagar" :zerar="zerar" :evento-teclado="eventoTeclado" :novo-modo-resposta="state.novoModo" />
 </template>
 
 

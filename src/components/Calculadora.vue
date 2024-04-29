@@ -5,7 +5,7 @@ const props = defineProps(['igual', 'getNumbers', 'show', 'setNumbers', 'setOper
 </script>
 
 <template>
-    <main @keydown="props.eventoTeclado" class="main" :class="{ 'main--modo-light': props.novoModoResposta }">
+    <main @keydown="props.eventoTeclado" class="main" :class="{'main--modo-light': props.novoModoResposta}">
         <div class="calculadora">
             <p class="calculadora__display">{{ props.show }}</p>
             <div class="numero">
@@ -29,8 +29,6 @@ const props = defineProps(['igual', 'getNumbers', 'show', 'setNumbers', 'setOper
             </div>
         </div>
         <div class="interruptor">
-            <input @change="props.novoModo" class="check" id="check" type="checkbox">
-
             <label class="sun-moon" for="check">
                 <i class="sun fa-solid fa-sun"></i>
 
